@@ -1,0 +1,16 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dbi (0.4.5)
+      deprecated (= 2.0.1)
+    deprecated (2.0.1)
+    ruby-oci8 (2.1.7)
+    sequel (4.19.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dbi
+  ruby-oci8
+  sequel
