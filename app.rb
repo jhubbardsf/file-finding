@@ -43,3 +43,4 @@ files.each do |file|
   files_with_blobs << file if file.filedata != nil
 end
 
+puts "Files with blobs: #{files_with_blobs.count}"
