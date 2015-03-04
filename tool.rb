@@ -60,8 +60,7 @@ module Tool
       end
 
       # ZIP everything up.
-      zf = ZipFileGenerator.new('./tmp/', "./output/#{file.saving_dir}/#{file.filename}.zip")
-      zf.write()
+      zip_files('./tmp/', "./output/#{file.saving_dir}/#{file.filename}.zip")
 
       # Delete temp
       FileUtils.rm_rf("./tmp/.", secure: true)
@@ -70,6 +69,10 @@ module Tool
         break
       end
     end
+  end
+
+  def zip_files(input_dir, output_filename)
+
   end
 end
 
