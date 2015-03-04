@@ -1,0 +1,5 @@
+:username: 'oracle'
+:password: 'welcome1'
+:server_address: 'oracleserver'
+:server_port: '1521'
+:server_schema: 'orcl'

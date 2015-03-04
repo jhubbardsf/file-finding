@@ -9,8 +9,6 @@ module Tool
     startrange = Date.strptime(startdate, '%Y/%m/%d')
     endrange = Date.strptime(enddate, '%Y/%m/%d')
 
-    puts 'Searching reports.'
-
     SqUnitReport.where(:starttime => (startrange)..(endrange))
   end
 
@@ -25,11 +23,38 @@ module Tool
     files
   end
 
+
+  def save_files_and_attachments(files)
+    files.each do |file|
+      #Save initial XML file.
+      source = file.filedata
+      doc = Nokogiri::XML source
+      File.open("./tmp/#{file.filename}", 'w') { |f| f.write(doc) }
+
+      # Save attachments if any.
+      if file.has_attachment?
+        save_attachments(file)
+      end
+
+      dir = file.saving_dir
+
+      # Make directory
+      FileUtils::mkdir_p "./output/#{dir}"
+
+      # ZIP everything up.
+      zf = ZipFileGenerator.new('./tmp/', "./output/#{dir}/#{file.filename}.zip")
+      zf.write()
+
+      # Delete temp
+      FileUtils.rm_rf("./tmp/.", secure: true)
+    end
+
+    files.size
+  end
+
   def save_attachments(file)
     file.attachment_ref.each do |attachment_ref|
-      puts attachment_ref.attachment_id.to_i
       attachment = SqValueAttachment.where(:attachment_id => "#{attachment_ref.attachment_id}").first
-      puts attachment.class.name
       path_name = attachment.fqn
       file_name = Tool.get_file_name(path_name)
 
@@ -44,35 +69,9 @@ module Tool
     end
   end
 
-  def save_files_and_attachments(files)
-    i = true
-    files.each do |file|
-      #Save initial XML file.
-      source = file.filedata
-      doc = Nokogiri::XML source
-      File.open("./tmp/#{file.filename}", 'w') { |f| f.write(doc) }
-
-      # Save attachments if any.
-      if file.has_attachment?
-        puts file.has_attachment?
-        puts file.number_of_attachments
-        save_attachments(file)
-      end
-
-      # ZIP everything up.
-      zip_files('./tmp/', "./output/#{file.saving_dir}/#{file.filename}.zip")
-
-      # Delete temp
-      FileUtils.rm_rf("./tmp/.", secure: true)
-
-      if (i == true)
-        break
-      end
-    end
-  end
-
-  def zip_files(input_dir, output_filename)
-
+  def valid_date?(date)
+    y, m, d = date.split '/'
+    Date.valid_date? y.to_i, m.to_i, d.to_i
   end
 end
 

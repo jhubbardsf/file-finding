@@ -1,10 +1,10 @@
 puts 'Creating models.'
 
-
 class SqUnitReportCompressedFile < Sequel::Model(:CSSDEMO__SQ_UNIT_REPORT_COMPRESSED_FILE)
   set_primary_key [:id]
 
   one_to_many :attachment_ref, class: :SqValueAttachmentRel, key: :unitreport_id
+  one_to_one :sq_unit, class: :SqUnitReport, key: :id
 
   def has_attachment?
     number_of_attachments > 0
@@ -20,6 +20,10 @@ class SqUnitReportCompressedFile < Sequel::Model(:CSSDEMO__SQ_UNIT_REPORT_COMPRE
       attachments << ref.attachment
     end
     attachments
+  end
+
+  def saving_dir
+    time = sq_unit.starttime.strftime('%Y/%m/%d')
   end
 end
 
