@@ -29,7 +29,7 @@ module Tool
       #Save initial XML file.
       source = file.filedata
       doc = Nokogiri::XML source
-      File.open("./tmp/#{file.filename}", 'w') { |f| f.write(doc) }
+      File.open("./tmp/#{file.filename}", 'wb') { |f| f.write(doc) }
 
       # Save attachments if any.
       if file.has_attachment?
@@ -65,7 +65,7 @@ module Tool
         data.gsub!("\u2028", "\r\n")
       end
 
-      File.open('./tmp/' + file_name, 'w') { |f| f.write(data) }
+      File.open('./tmp/' + file_name, 'wb') { |f| f.write(data) }
     end
   end
 
