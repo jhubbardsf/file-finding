@@ -46,7 +46,7 @@ module Tool
       zf.write()
 
       # Delete temp
-      FileUtils.rm_rf("./tmp/.", secure: true)
+      FileUtils.rm_rf(Dir.glob('./tmp/*'))
     end
 
     files.size
