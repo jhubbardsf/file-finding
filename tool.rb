@@ -29,7 +29,7 @@ module Tool
       #Save initial XML file.
       source = file.filedata
       doc = Nokogiri::XML source
-      File.open("./tmp/#{file.filename}", 'wb') { |f| f.write(doc) }
+      File.open("./tmp/#{file.filename}.zip", 'wb') { |f| f.write(doc) }
 
       # Save attachments if any.
       if file.has_attachment?
