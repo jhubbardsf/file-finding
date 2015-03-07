@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'sequel'
-require 'nokogiri'
 require 'zip'
 require 'fileutils'
 require 'yaml'
