@@ -56,11 +56,11 @@ module Tool
       attachment = SqValueAttachment.where(:attachment_id => "#{attachment_ref.attachment_id}").first
       path_name = attachment.fqn
       file_name = Tool.get_file_name(path_name)
-      
-      if (attachment.value_string != nil || attachment.value_string == "")
-      data = attachment.value_string
-      data.gsub!("\u2028", "\r\n")
-      elsif (attachment.value_binary != nil || attachment.value_binary == "")
+
+      if (attachment.value_string > 0)
+        data = attachment.value_string
+        data.gsub!("\u2028", "\r\n")
+      elsif (attachment.value_binary > 0)
         data = attachment.value_binary
       end
 
