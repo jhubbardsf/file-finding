@@ -57,9 +57,9 @@ module Tool
       path_name = attachment.fqn
       file_name = Tool.get_file_name(path_name)
 
-      if (attachment.value_binary != nil)
+      if (attachment.value_binary != nil || attachment.value_binary == "")
         data = attachment.value_binary
-      elsif (attachment.value_string != nil)
+      elsif (attachment.value_string != nil || attachment.value_string == "")
         data = attachment.value_string
         data.gsub!("\u2028", "\r\n")
       end
