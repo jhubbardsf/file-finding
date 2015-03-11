@@ -38,6 +38,8 @@ module Tools
       source = file.filedata
       File.open("#{file_tmp_dir}/#{file.filename}.zip", 'wb') { |f| f.write(source) }
 
+      unzip_file("#{file_tmp_dir}/#{file.filename}.zip", file_tmp_dir, file.filename)
+
       # Save attachments if any.
       if file.has_attachment?
         save_attachments(file)
@@ -84,5 +86,13 @@ module Tools
 
   def percent_of(first, second)
     (first.to_f / second.to_f) * 100
+  end
+
+  def unzip_file (file_absolute_path, destination, file_name)
+    Zip::File.open(file) do |zip_file|
+      zip_file.each do |f|
+        f.extract("#{destination}/#{file_name}.zip")
+      end
+    end
   end
 end
