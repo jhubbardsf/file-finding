@@ -89,7 +89,7 @@ module Tools
   end
 
   def unzip_file (file_absolute_path, destination, file_name)
-    Zip::File.open(file) do |zip_file|
+    Zip::File.open(file_absolute_path) do |zip_file|
       zip_file.each do |f|
         f.extract("#{destination}/#{file_name}.zip")
       end
