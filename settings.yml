@@ -3,3 +3,4 @@
 :server_address: 'oracleserver'
 :server_port: '1521'
 :server_schema: 'orcl'
+:schema: 'CSSDEMO'

@@ -6,7 +6,7 @@ require 'fileutils'
 require 'yaml'
 require './tool.rb'
 require './zip_file.rb'
-include Tool
+include Tools
 
 FileUtils.mkdir_p 'tmp'
 s = YAML::load(File.open('./settings.yml'))
@@ -38,6 +38,7 @@ end
 
 puts 'Connecting to DB.'
 Sequel.connect("oracle://#{s[:username]}:#{s[:password]}@#{s[:server_address]}:#{s[:server_port]}/#{s[:server_schema]}") { |db|
+  puts 'Creating models.'
   require './models.rb'
 
   puts 'Get reports by time range.'

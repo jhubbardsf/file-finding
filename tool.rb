@@ -1,4 +1,4 @@
-module Tool
+module Tools
 
   def get_file_name(full_address)
     full_address.gsub!('\\', '/')
@@ -25,27 +25,36 @@ module Tool
 
 
   def save_files_and_attachments(files)
+    i = 0
+
     files.each do |file|
+      dir = file.saving_dir
+      file_tmp_dir = "./tmp/#{file.filename}"
+
+      # Make tmp dir
+      FileUtils.mkdir_p file_tmp_dir
+
       #Save initial XML file.
       source = file.filedata
-      File.open("./tmp/#{file.filename}.zip", 'wb') { |f| f.write(source) }
+      File.open("#{file_tmp_dir}/#{file.filename}.zip", 'wb') { |f| f.write(source) }
 
       # Save attachments if any.
       if file.has_attachment?
         save_attachments(file)
       end
 
-      dir = file.saving_dir
-
-      # Make directory
-      FileUtils::mkdir_p "./output/#{dir}"
+      # Make output directory
+      FileUtils.mkdir_p "./output/#{dir}"
 
       # ZIP everything up.
-      zf = ZipFileGenerator.new('./tmp/', "./output/#{dir}/#{file.filename}.zip")
+      zf = ZipFileGenerator.new(file_tmp_dir, "./output/#{dir}/#{file.filename}.zip")
       zf.write()
+      print "#{i = i + 1} out of #{files.size} zip files written."
+      print " (#{percent_of(i, files.size).round(2)}%)"
+      print "\r"
 
       # Delete temp
-      FileUtils.rm_rf(Dir.glob('./tmp/*'))
+      FileUtils.rm_rf(file_tmp_dir, secure: true)
     end
 
     files.size
@@ -55,16 +64,16 @@ module Tool
     file.attachment_ref.each do |attachment_ref|
       attachment = SqValueAttachment.where(:attachment_id => "#{attachment_ref.attachment_id}").first
       path_name = attachment.fqn
-      file_name = Tool.get_file_name(path_name)
+      file_name = get_file_name(path_name)
 
-      if (attachment.value_string.empty?)
+      if (attachment.value_string != nil && !attachment.value_string.empty?)
         data = attachment.value_string
         data.gsub!("\u2028", "\r\n")
-      elsif (attachment.value_binary.empty?)
+      elsif (attachment.value_binary != nil && !attachment.value_binary.empty?)
         data = attachment.value_binary
       end
 
-      File.open('./tmp/' + file_name, 'wb') { |f| f.write(data) }
+      File.open("./tmp/#{file.filename}/" + file_name, 'wb') { |f| f.write(data) }
     end
   end
 
@@ -72,5 +81,8 @@ module Tool
     y, m, d = date.split '/'
     Date.valid_date? y.to_i, m.to_i, d.to_i
   end
-end
 
+  def percent_of(first, second)
+    (first.to_f / second.to_f) * 100
+  end
+end

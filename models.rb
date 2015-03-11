@@ -1,6 +1,6 @@
-puts 'Creating models.'
+s = YAML::load(File.open('./settings.yml'))
 
-class SqUnitReportCompressedFile < Sequel::Model(:CSSDEMO__SQ_UNIT_REPORT_COMPRESSED_FILE)
+class SqUnitReportCompressedFile < Sequel::Model(:"#{s[:schema]}__SQ_UNIT_REPORT_COMPRESSED_FILE")
   set_primary_key [:id]
 
   one_to_many :attachment_ref, class: :SqValueAttachmentRel, key: :unitreport_id
@@ -27,18 +27,18 @@ class SqUnitReportCompressedFile < Sequel::Model(:CSSDEMO__SQ_UNIT_REPORT_COMPRE
   end
 end
 
-class SqUnitReport < Sequel::Model(:CSSDEMO__SQ_UNIT_REPORT)
+class SqUnitReport < Sequel::Model(:"#{s[:schema]}__SQ_UNIT_REPORT")
   set_primary_key [:id]
 
   one_to_one :compressed_file, class: SqUnitReportCompressedFile, key: :id
 end
 
-class SqValueAttachment < Sequel::Model(:CSSDEMO__SQ_VALUE_ATTACHMENT)
+class SqValueAttachment < Sequel::Model(:"#{s[:schema]}__SQ_VALUE_ATTACHMENT")
   set_primary_key [:id]
 
 end
 
-class SqValueAttachmentRel < Sequel::Model(:CSSDEMO__SQ_VALUE_ATTACHMENT_REL)
+class SqValueAttachmentRel < Sequel::Model(:"#{s[:schema]}__SQ_VALUE_ATTACHMENT_REL")
   set_primary_key [:id]
 
   one_to_one :attachment, class: :SqValueAttachment, key: :attachment_id
