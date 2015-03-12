@@ -4,8 +4,9 @@ require 'sequel'
 require 'zip'
 require 'fileutils'
 require 'yaml'
-require './tool.rb'
+require 'nokogiri'
 require './zip_file.rb'
+require './tool.rb'
 include Tools
 
 FileUtils.mkdir_p 'tmp'

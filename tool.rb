@@ -34,11 +34,29 @@ module Tools
       # Make tmp dir
       FileUtils.mkdir_p file_tmp_dir
 
-      #Save initial XML file.
+      # Save initial XML file.
       source = file.filedata
       File.open("#{file_tmp_dir}/#{file.filename}.zip", 'wb') { |f| f.write(source) }
 
-      unzip_file("#{file_tmp_dir}/#{file.filename}.zip", file_tmp_dir, file.filename)
+      # Unzip XML file
+      begin
+        Zip::File.open("#{file_tmp_dir}/#{file.filename}.zip") { |zip_file|
+          zip_file.each { |f|
+            f_path= File.join(file_tmp_dir, file.filename)
+            FileUtils.mkdir_p(File.dirname(f_path))
+            zip_file.extract(f, f_path) unless File.exist?(f_path)
+          }
+        }
+
+        # Formats XML file
+        current = File.open("#{file_tmp_dir}/#{file.filename}",'r').read
+        File.open("#{file_tmp_dir}/#{file.filename}",'w') { |f| f.print Nokogiri::XML(current).to_xml  }
+      rescue
+        puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
+      end
+
+      # Delete old zip file.
+      File.delete("#{file_tmp_dir}/#{file.filename}.zip")
 
       # Save attachments if any.
       if file.has_attachment?
@@ -86,13 +104,5 @@ module Tools
 
   def percent_of(first, second)
     (first.to_f / second.to_f) * 100
-  end
-
-  def unzip_file (file_absolute_path, destination, file_name)
-    Zip::File.open(file_absolute_path) do |zip_file|
-      zip_file.each do |f|
-        f.extract("#{destination}/#{file_name}.zip")
-      end
-    end
   end
 end
