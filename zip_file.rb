@@ -12,7 +12,8 @@ class ZipFileGenerator
     writeEntries(entries, '', io)
     io.close();
 
-    FileUtils.rm_rf(@inputDir)
+    # FileUtils.rm_rf(@inputDir)
+    FileUtils.remove_dir(@inputDir)
   end
 
   # A helper method to make the recursion work.
