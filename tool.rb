@@ -72,7 +72,7 @@ module Tools
 
       # ZIP everything up.
       zf = ZipFileGenerator.new(file_tmp_dir, "./output/#{dir}/#{file.filename}.zip")
-      zf.write()
+      zf.write_move_delete()
       print "#{i = i + 1} out of #{files.size} zip files written."
       print " (#{percent_of(i, files.size).round(2)}%)"
       print "\r"
@@ -104,7 +104,7 @@ module Tools
   end
 
   def percent_of(first, second)
-    return 0 if first.to_i == 0
+    return 0 if second.to_i == 0
     (first.to_f / second.to_f) * 100
   end
 end

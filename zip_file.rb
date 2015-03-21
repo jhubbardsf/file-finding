@@ -6,7 +6,7 @@ class ZipFileGenerator
   end
 
   # Zip the input directory.
-  def write()
+  def write_move_delete
     entries = Dir.entries(@inputDir); entries.delete('.'); entries.delete('..')
     io = Zip::File.open(@outputFile, Zip::File::CREATE);
     writeEntries(entries, '', io)
