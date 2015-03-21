@@ -12,7 +12,7 @@ class ZipFileGenerator
     writeEntries(entries, '', io)
     io.close();
 
-    FileUtils.rm_rf(@inputDir, secure: true)
+    FileUtils.rm_rf(@inputDir)
   end
 
   # A helper method to make the recursion work.

@@ -27,10 +27,12 @@ module Tools
     i = 0
 
     files.each do |file|
-      file_out_tree = "./output/#{file.saving_dir}"
-      file_tmp_dir = "./tmp/#{file.filename}"
-      file_tmp_zip = "#{file_tmp_dir}/#{file.filename}.zip"
-      file_tmp_full = "#{file_tmp_dir}/#{file.filename}"
+      file_out_tree      = "./output/#{file.saving_dir}"
+      file_out_full_name = "#{file_out_tree}/#{file.filename}.zip"
+
+      file_tmp_dir       = "./tmp/#{file.filename}"
+      file_tmp_zip       = "#{file_tmp_dir}/#{file.filename}.zip"
+      file_tmp_full      = "#{file_tmp_dir}/#{file.filename}"
 
 
       # Make tmp dir
@@ -51,7 +53,7 @@ module Tools
         }
 
         # Formats XML file
-        current = File.open(file_tmp_zip,'r') { |f| f.read }
+        current = File.read(file_tmp_zip)
         File.open(file_tmp_dir,'w') { |f| f.print Nokogiri::XML(current).to_xml  }
 
       rescue
@@ -70,7 +72,7 @@ module Tools
       FileUtils.mkdir_p file_out_tree
 
       # ZIP everything up.
-      zf = ZipFileGenerator.new(file_tmp_dir, "#{file_out_tree}/#{file.filename}.zip")
+      zf = ZipFileGenerator.new(file_tmp_dir, file_out_full_name)
       zf.write_move_delete()
       print "#{i = i + 1} out of #{files.size} zip files written."
       print " (#{percent_of(i, files.size).round(2)}%)"
