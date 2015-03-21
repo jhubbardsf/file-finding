@@ -14,10 +14,6 @@ module Tools
 
   def files_from_names (file_names)
     files = []
-    i = 0
-    print "#{i = i + 1} out of #{file_names.size} zip files written."
-    print " (#{percent_of(i, files.size).round(2)}%)"
-    print "\r"
     file_names.each_slice(1000) { | search_names|
       file_array = SqUnitReportCompressedFile.where(:filename => search_names)
       file_array.each do |file|
