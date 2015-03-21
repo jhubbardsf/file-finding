@@ -51,7 +51,7 @@ module Tools
         }
 
         # Formats XML file
-        current = File.open(file_tmp_zip,'r').read
+        current = File.open(file_tmp_zip,'r') { |f| f.read }
         File.open(file_tmp_dir,'w') { |f| f.print Nokogiri::XML(current).to_xml  }
 
       rescue
