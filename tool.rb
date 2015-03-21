@@ -27,7 +27,6 @@ module Tools
     files
   end
 
-
   def save_files_and_attachments(files)
     i = 0
 
