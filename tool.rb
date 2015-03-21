@@ -104,6 +104,7 @@ module Tools
   end
 
   def percent_of(first, second)
+    return 0 if first.to_i == 0
     (first.to_f / second.to_f) * 100
   end
 end
