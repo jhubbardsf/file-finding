@@ -50,12 +50,15 @@ module Tools
         # Formats XML file
         current = File.open("#{file_tmp_dir}/#{file.filename}",'r').read
         File.open("#{file_tmp_dir}/#{file.filename}",'w') { |f| f.print Nokogiri::XML(current).to_xml  }
+
+        while (!File.file?("./tmp/#{file.filename}/#{file.filename}")) do
+          # Delete old zip file.
+          File.delete("#{file_tmp_dir}/#{file.filename}.zip")
+        end
       rescue
         # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
       end
 
-      # Delete old zip file.
-      File.delete("#{file_tmp_dir}/#{file.filename}.zip")
 
       # Save attachments if any.
       if file.has_attachment?
