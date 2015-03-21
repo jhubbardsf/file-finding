@@ -77,6 +77,8 @@ module Tools
       print "#{i = i + 1} out of #{files.size} zip files written."
       print " (#{percent_of(i, files.size).round(2)}%)"
       print "\r"
+
+      FileUtils.remove_dir(file_tmp_dir, force: true)
     end
 
     files.size

@@ -11,9 +11,6 @@ class ZipFileGenerator
     io = Zip::File.open(@outputFile, Zip::File::CREATE);
     writeEntries(entries, '', io)
     io.close();
-
-    # FileUtils.rm_rf(@inputDir)
-    FileUtils.remove_dir(@inputDir, force: true)
   end
 
   # A helper method to make the recursion work.
