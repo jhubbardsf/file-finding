@@ -27,38 +27,39 @@ module Tools
     i = 0
 
     files.each do |file|
-      dir = file.saving_dir
+      file_out_tree = "./output/#{file.saving_dir}"
       file_tmp_dir = "./tmp/#{file.filename}"
+      file_tmp_zip = "#{file_tmp_dir}/#{file.filename}.zip"
+      file_tmp_full = "#{file_tmp_dir}/#{file.filename}"
+
 
       # Make tmp dir
       FileUtils.mkdir_p file_tmp_dir
 
       # Save initial XML file.
       source = file.filedata
-      File.open("#{file_tmp_dir}/#{file.filename}.zip", 'wb') { |f| f.write(source) }
+      File.open(file_tmp_zip, 'wb') { |f| f.write(source) }
 
       # Unzip XML file
       begin
-        Zip::File.open("#{file_tmp_dir}/#{file.filename}.zip") { |zip_file|
+        Zip::File.open(file_tmp_zip) { |zip_file|
           zip_file.each { |f|
-            f_path= File.join(file_tmp_dir, file.filename)
+            f_path = file_tmp_full
             FileUtils.mkdir_p(File.dirname(f_path))
             zip_file.extract(f, f_path) unless File.exist?(f_path)
           }
         }
 
         # Formats XML file
-        current = File.open("#{file_tmp_dir}/#{file.filename}",'r').read
-        File.open("#{file_tmp_dir}/#{file.filename}",'w') { |f| f.print Nokogiri::XML(current).to_xml  }
+        current = File.open(file_tmp_zip,'r').read
+        File.open(file_tmp_dir,'w') { |f| f.print Nokogiri::XML(current).to_xml  }
 
-        while (!File.file?("./tmp/#{file.filename}/#{file.filename}")) do
-          # Delete old zip file.
-          File.delete("#{file_tmp_dir}/#{file.filename}.zip")
-        end
       rescue
         # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
       end
 
+      # Delete zip
+      File.delete(file_tmp_zip)
 
       # Save attachments if any.
       if file.has_attachment?
@@ -66,10 +67,10 @@ module Tools
       end
 
       # Make output directory
-      FileUtils.mkdir_p "./output/#{dir}"
+      FileUtils.mkdir_p file_out_tree
 
       # ZIP everything up.
-      zf = ZipFileGenerator.new(file_tmp_dir, "./output/#{dir}/#{file.filename}.zip")
+      zf = ZipFileGenerator.new(file_tmp_dir, "#{file_out_tree}/#{file.filename}.zip")
       zf.write_move_delete()
       print "#{i = i + 1} out of #{files.size} zip files written."
       print " (#{percent_of(i, files.size).round(2)}%)"
