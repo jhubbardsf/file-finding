@@ -13,7 +13,7 @@ class ZipFileGenerator
     io.close();
 
     # FileUtils.rm_rf(@inputDir)
-    FileUtils.remove_dir(@inputDir)
+    FileUtils.remove_dir(@inputDir, force: true)
   end
 
   # A helper method to make the recursion work.
