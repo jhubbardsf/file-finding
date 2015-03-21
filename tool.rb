@@ -55,8 +55,7 @@ module Tools
         current = File.open("#{file_tmp_dir}/#{file.filename}",'r').read
         File.open("#{file_tmp_dir}/#{file.filename}",'w') { |f| f.print Nokogiri::XML(current).to_xml  }
       rescue
-        puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
-
+        # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
       end
 
       # Delete old zip file.
