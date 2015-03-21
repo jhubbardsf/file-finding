@@ -43,7 +43,6 @@ module Tools
       File.open("#{file_tmp_dir}/#{file.filename}.zip", 'wb') { |f| f.write(source) }
 
       # Unzip XML file
-      error_num = 0
       begin
         Zip::File.open("#{file_tmp_dir}/#{file.filename}.zip") { |zip_file|
           zip_file.each { |f|
@@ -57,12 +56,8 @@ module Tools
         current = File.open("#{file_tmp_dir}/#{file.filename}",'r').read
         File.open("#{file_tmp_dir}/#{file.filename}",'w') { |f| f.print Nokogiri::XML(current).to_xml  }
       rescue
-        # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
-        error_num += 1
-      end
+        puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
 
-      if error_num
-        puts "There were #{error_num} errors writing zip files."
       end
 
       # Delete old zip file.
@@ -82,9 +77,6 @@ module Tools
       print "#{i = i + 1} out of #{files.size} zip files written."
       print " (#{percent_of(i, files.size).round(2)}%)"
       print "\r"
-
-      # Delete temp for that file
-      FileUtils.rm_r(file_tmp_dir, secure: true)
     end
 
     files.size
