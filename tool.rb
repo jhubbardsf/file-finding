@@ -6,6 +6,7 @@ module Tools
   end
 
   def get_reports (startdate, enddate)
+    puts 'Point -2'
     startrange = Date.strptime(startdate, '%Y/%m/%d')
     endrange = Date.strptime(enddate, '%Y/%m/%d')
 
@@ -13,6 +14,7 @@ module Tools
   end
 
   def files_from_names (file_names)
+    puts 'Point -1'
     files = []
     file_names.each_slice(1000) { | search_names|
       file_array = SqUnitReportCompressedFile.where(:filename => search_names)
@@ -25,6 +27,8 @@ module Tools
 
   def save_files_and_attachments(files)
     i = 0
+
+    puts 'Point 0'
 
     files.each do |file|
       file_out_tree      = "//10.40.10.6/ftp/FTPRoot/Temp-Archive/Files/#{file.saving_dir}/"
