@@ -9,7 +9,7 @@ module Tools
     startrange = Date.strptime(startdate, '%Y/%m/%d')
     endrange = Date.strptime(enddate, '%Y/%m/%d')
 
-    SqUnitReport.where(:starttime => (startrange)..(endrange))
+    SqUnitReport.where(:created_date => (startrange)..(endrange))
   end
 
   def files_from_names (file_names)
