@@ -81,6 +81,7 @@ module Tools
       FileUtils.remove_dir(file_tmp_dir)
     end
 
+    FileUtils.remove_dir('//10.40.10.62/ExtractedFiles/Files/tmp/')
     files.size
   end
 
