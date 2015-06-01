@@ -23,62 +23,64 @@ module Tools
     files
   end
 
-  def save_files_and_attachments(files)
+  def save_files_and_attachments(files_original)
     i = 0
 
-    files.each do |file|
-      file_out_tree      = "//10.40.10.62/ExtractedFiles/Files/#{file.saving_dir}/"
-      file_out_full_name = "#{file_out_tree}/#{file.filename}.zip"
+    files_original.each_slice(15000) do |files|
+      files.each do |file|
+        file_out_tree      = "//10.40.10.62/ExtractedFiles/Files/#{file.saving_dir}/"
+        file_out_full_name = "#{file_out_tree}/#{file.filename}.zip"
 
-      file_tmp_dir       = "//10.40.10.62/ExtractedFiles/Files/tmp/#{file.filename}/"
-      file_tmp_zip       = "#{file_tmp_dir}/#{file.filename}.zip"
-      file_tmp_full      = "#{file_tmp_dir}/#{file.filename}"
+        file_tmp_dir       = "//10.40.10.62/ExtractedFiles/Files/tmp/#{file.filename}/"
+        file_tmp_zip       = "#{file_tmp_dir}/#{file.filename}.zip"
+        file_tmp_full      = "#{file_tmp_dir}/#{file.filename}"
 
-      # Make tmp dir
-      FileUtils.mkdir_p file_tmp_dir
+        # Make tmp dir
+        FileUtils.mkdir_p file_tmp_dir
 
-      # Save initial XML file.
-      source = file.filedata
-      File.open(file_tmp_zip, 'wb') { |f| f.write(source) }
-      
-      # Unzip XML file
-      begin
-        Zip::File.open(file_tmp_zip) { |zip_file|
-          zip_file.each { |f|
-            f_path = file_tmp_full
-            FileUtils.mkdir_p(File.dirname(f_path))
-            zip_file.extract(f, f_path) unless File.exist?(f_path)
+        # Save initial XML file.
+        source = file.filedata
+        File.open(file_tmp_zip, 'wb') { |f| f.write(source) }
+
+        # Unzip XML file
+        begin
+          Zip::File.open(file_tmp_zip) { |zip_file|
+            zip_file.each { |f|
+              f_path = file_tmp_full
+              FileUtils.mkdir_p(File.dirname(f_path))
+              zip_file.extract(f, f_path) unless File.exist?(f_path)
+            }
           }
-        }
 
-        # Formats XML file
-        current = File.read(file_tmp_zip)
-        File.open(file_tmp_dir,'w') { |f| f.print Nokogiri::XML(current).to_xml  }
-        
+          # Formats XML file
+          current = File.read(file_tmp_zip)
+          File.open(file_tmp_dir,'w') { |f| f.print Nokogiri::XML(current).to_xml  }
 
-      rescue
-        # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
+
+        rescue
+          # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
+        end
+
+        # Delete zip
+        File.delete(file_tmp_zip)
+
+        # Save attachments if any.
+        if file.has_attachment?
+          save_attachments(file)
+        end
+
+        # Make output directory
+        FileUtils.mkdir_p file_out_tree
+
+        # ZIP everything up.
+        zf = ZipFileGenerator.new(file_tmp_dir, file_out_full_name)
+        zf.write_move_delete()
+        print "#{i = i + 1} out of #{files.size} zip files written."
+        print " (#{percent_of(i, files.size).round(2)}%)"
+        print "\r"
+
+        FileUtils.remove_dir(file_tmp_dir)
       end
-
-      # Delete zip
-      File.delete(file_tmp_zip)
-
-      # Save attachments if any.
-      if file.has_attachment?
-        save_attachments(file)
-      end
-
-      # Make output directory
-      FileUtils.mkdir_p file_out_tree
-
-      # ZIP everything up.
-      zf = ZipFileGenerator.new(file_tmp_dir, file_out_full_name)
-      zf.write_move_delete()
-      print "#{i = i + 1} out of #{files.size} zip files written."
-      print " (#{percent_of(i, files.size).round(2)}%)"
-      print "\r"
-
-      FileUtils.remove_dir(file_tmp_dir)
     end
 
     FileUtils.remove_dir('//10.40.10.62/ExtractedFiles/Files/tmp/')
