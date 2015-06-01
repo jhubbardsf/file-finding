@@ -39,8 +39,8 @@ module Tools
 
       # Save initial XML file.
       source = file.filedata
-      File.open(file_tmp_zip, 'wb') { |f| f.write(source) }
-
+      f = File.open(file_tmp_zip, 'wb') { |f| f.write(source) }
+      f.close
       # Unzip XML file
       begin
         Zip::File.open(file_tmp_zip) { |zip_file|
@@ -53,7 +53,8 @@ module Tools
 
         # Formats XML file
         current = File.read(file_tmp_zip)
-        File.open(file_tmp_dir,'w') { |f| f.print Nokogiri::XML(current).to_xml  }
+        f = File.open(file_tmp_dir,'w') { |f| f.print Nokogiri::XML(current).to_xml  }
+        f.close
 
       rescue
         # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
@@ -96,7 +97,8 @@ module Tools
         data = attachment.value_binary
       end
 
-      File.open("//10.40.10.6/ftp/FTPRoot/Temp-Archive/Files/tmp/#{file.filename}/" + file_name, 'wb') { |f| f.write(data) }
+      f = File.open("//10.40.10.6/ftp/FTPRoot/Temp-Archive/Files/tmp/#{file.filename}/" + file_name, 'wb') { |f| f.write(data) }
+      f.close
     end
   end
 
