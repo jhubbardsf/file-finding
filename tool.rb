@@ -35,15 +35,18 @@ module Tools
       file_tmp_full      = "#{file_tmp_dir}/#{file.filename}"
 
 
+      puts 'Point 1'
       # Make tmp dir
       FileUtils.mkdir_p file_tmp_dir
 
+      puts 'Point 2'
       # Save initial XML file.
       source = file.filedata
       File.open(file_tmp_zip, 'wb') { |f| f.write(source) }
 
       # Unzip XML file
       begin
+        puts 'Point 3'
         Zip::File.open(file_tmp_zip) { |zip_file|
           zip_file.each { |f|
             f_path = file_tmp_full
@@ -60,6 +63,7 @@ module Tools
         # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
       end
 
+      puts 'Point 4'
       # Delete zip
       File.delete(file_tmp_zip)
 
@@ -68,6 +72,7 @@ module Tools
         save_attachments(file)
       end
 
+      puts 'Point 5'
       # Make output directory
       FileUtils.mkdir_p file_out_tree
 
@@ -78,6 +83,7 @@ module Tools
       print " (#{percent_of(i, files.size).round(2)}%)"
       print "\r"
 
+      puts 'Point 6'
       FileUtils.remove_dir(file_tmp_dir, force: true)
     end
 
