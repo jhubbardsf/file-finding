@@ -80,10 +80,10 @@ module Tools
         print " (#{percent_of(i, total_count).round(2)}%)"
         print "\r"
       end
+      FileUtils.remove_dir('//10.40.10.62/ExtractedFiles/Files/tmp/')
     end
 
-    FileUtils.remove_dir('//10.40.10.62/ExtractedFiles/Files/tmp/')
-    files.size
+    total_count
   end
 
   def save_attachments(file)
