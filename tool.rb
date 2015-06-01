@@ -27,10 +27,10 @@ module Tools
     i = 0
 
     files.each do |file|
-      file_out_tree      = "//10.40.10.6/ftp/FTPRoot/Temp-Archive/Filesoutput/#{file.saving_dir}/"
+      file_out_tree      = "//10.40.10.6/ftp/FTPRoot/Temp-Archive/Files/#{file.saving_dir}/"
       file_out_full_name = "#{file_out_tree}/#{file.filename}.zip"
 
-      file_tmp_dir       = "//10.40.10.6/ftp/FTPRoot/Temp-Archive/Filestmp/#{file.filename}/"
+      file_tmp_dir       = "//10.40.10.6/ftp/FTPRoot/Temp-Archive/Files/tmp/#{file.filename}/"
       file_tmp_zip       = "#{file_tmp_dir}/#{file.filename}.zip"
       file_tmp_full      = "#{file_tmp_dir}/#{file.filename}"
 
