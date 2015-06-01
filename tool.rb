@@ -77,7 +77,7 @@ module Tools
       print " (#{percent_of(i, files.size).round(2)}%)"
       print "\r"
 
-      FileUtils.remove_dir(file_tmp_dir, force: true)
+      FileUtils.rm_rf(file_tmp_dir)
     end
 
     files.size
