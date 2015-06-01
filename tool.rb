@@ -6,7 +6,6 @@ module Tools
   end
 
   def get_reports (startdate, enddate)
-    puts 'Point -2'
     startrange = Date.strptime(startdate, '%Y/%m/%d')
     endrange = Date.strptime(enddate, '%Y/%m/%d')
 
@@ -14,7 +13,6 @@ module Tools
   end
 
   def files_from_names (file_names)
-    puts 'Point -1'
     files = []
     file_names.each_slice(1000) { | search_names|
       file_array = SqUnitReportCompressedFile.where(:filename => search_names)
@@ -28,8 +26,6 @@ module Tools
   def save_files_and_attachments(files)
     i = 0
 
-    puts 'Point 0'
-
     files.each do |file|
       file_out_tree      = "//10.40.10.6/ftp/FTPRoot/Temp-Archive/Files/#{file.saving_dir}/"
       file_out_full_name = "#{file_out_tree}/#{file.filename}.zip"
@@ -38,19 +34,15 @@ module Tools
       file_tmp_zip       = "#{file_tmp_dir}/#{file.filename}.zip"
       file_tmp_full      = "#{file_tmp_dir}/#{file.filename}"
 
-
-      puts 'Point 1'
       # Make tmp dir
       FileUtils.mkdir_p file_tmp_dir
 
-      puts 'Point 2'
       # Save initial XML file.
       source = file.filedata
       File.open(file_tmp_zip, 'wb') { |f| f.write(source) }
 
       # Unzip XML file
       begin
-        puts 'Point 3'
         Zip::File.open(file_tmp_zip) { |zip_file|
           zip_file.each { |f|
             f_path = file_tmp_full
@@ -67,7 +59,6 @@ module Tools
         # puts "Error with zip file: #{file_tmp_dir}/#{file.filename}.zip"
       end
 
-      puts 'Point 4'
       # Delete zip
       File.delete(file_tmp_zip)
 
@@ -76,7 +67,6 @@ module Tools
         save_attachments(file)
       end
 
-      puts 'Point 5'
       # Make output directory
       FileUtils.mkdir_p file_out_tree
 
@@ -87,7 +77,6 @@ module Tools
       print " (#{percent_of(i, files.size).round(2)}%)"
       print "\r"
 
-      puts 'Point 6'
       FileUtils.remove_dir(file_tmp_dir, force: true)
     end
 

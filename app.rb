@@ -9,7 +9,6 @@ require './zip_file.rb'
 require './tool.rb'
 include Tools
 
-FileUtils.mkdir_p 'tmp'
 s = YAML::load(File.open('./settings.yml'))
 
 # Checks for both date arguments
