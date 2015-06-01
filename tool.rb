@@ -25,6 +25,7 @@ module Tools
 
   def save_files_and_attachments(files_original)
     i = 0
+    total_count = files_original.size
 
     files_original.each_slice(15000) do |files|
       files.each do |file|
@@ -75,8 +76,8 @@ module Tools
         # ZIP everything up.
         zf = ZipFileGenerator.new(file_tmp_dir, file_out_full_name)
         zf.write_move_delete()
-        print "#{i = i + 1} out of #{files.size} zip files written."
-        print " (#{percent_of(i, files.size).round(2)}%)"
+        print "#{i = i + 1} out of #{total_count} zip files written."
+        print " (#{percent_of(i, total_count).round(2)}%)"
         print "\r"
       end
     end
