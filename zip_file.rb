@@ -13,7 +13,6 @@ class ZipFileGenerator
     io = Zip::File.open(@outputFile, Zip::File::CREATE)
     writeEntries(entries, '', io)
     io.close()
-    entries.delete(@inputDir)
   end
 
   # A helper method to make the recursion work.

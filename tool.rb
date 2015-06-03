@@ -9,7 +9,7 @@ module Tools
     startrange = Date.strptime(startdate, '%Y/%m/%d')
     endrange = Date.strptime(enddate, '%Y/%m/%d')
 
-    SqUnitReport.where(:created_date => (startrange)..(endrange))
+    SqUnitReport.where(:created_date => (startrange)..(endrange)).limit(1000)
   end
 
   def files_from_names (file_names)
@@ -27,7 +27,7 @@ module Tools
     i = 0
     total_count = files_original.size
 
-    files_original.each_slice(15000) do |files|
+    files_original.each_slice(100) do |files|
       files.each do |file|
         file_out_tree      = "//10.40.10.62/ExtractedFiles/Files/#{file.saving_dir}/"
         file_out_full_name = "#{file_out_tree}/#{file.filename}.zip"
@@ -80,7 +80,7 @@ module Tools
         print " (#{percent_of(i, total_count).round(2)}%)"
         print "\r"
       end
-      FileUtils.remove_dir('//10.40.10.62/ExtractedFiles/Files/tmp/')
+      FileUtils.remove_dir('//10.40.10.62/ExtractedFiles/Files/tmp/', force: true)
     end
 
     total_count
