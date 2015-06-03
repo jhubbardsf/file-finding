@@ -7,10 +7,12 @@ class ZipFileGenerator
 
   # Zip the input directory.
   def write_move_delete
-    entries = Dir.entries(@inputDir); entries.delete('.'); entries.delete('..')
-    io = Zip::File.open(@outputFile, Zip::File::CREATE);
+    entries = Dir.entries(@inputDir)
+    entries.delete('.')
+    entries.delete('..')
+    io = Zip::File.open(@outputFile, Zip::File::CREATE)
     writeEntries(entries, '', io)
-    io.close();
+    io.close()
   end
 
   # A helper method to make the recursion work.
@@ -21,7 +23,9 @@ class ZipFileGenerator
       diskFilePath = File.join(@inputDir, zipFilePath)
       if File.directory?(diskFilePath)
         io.mkdir(zipFilePath)
-        subdir =Dir.entries(diskFilePath); subdir.delete('.'); subdir.delete('..')
+        subdir = Dir.entries(diskFilePath)
+        subdir.delete('.')
+        subdir.delete('..')
         writeEntries(subdir, zipFilePath, io)
       else
         io.get_output_stream(zipFilePath) { |f| f.print(File.open(diskFilePath, 'rb').read())}
