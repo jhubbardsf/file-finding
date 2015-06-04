@@ -46,10 +46,7 @@ Sequel.connect("oracle://#{s[:username]}:#{s[:password]}@#{s[:server_address]}:#
   file_names = reports.map(&:filename)
 
   puts 'Searching for files.'
-  files = files_from_names(file_names)
-
-  puts 'Writing files.'
-  total = save_files_and_attachments(files)
+  total = files_from_names(file_names)
 
   puts "Total zip files made: #{total}"
 

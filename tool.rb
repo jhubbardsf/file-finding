@@ -1,5 +1,4 @@
 module Tools
-
   def get_file_name(full_address)
     full_address.gsub!('\\', '/')
     File.basename(full_address)
@@ -14,13 +13,20 @@ module Tools
 
   def files_from_names (file_names)
     files = []
-    file_names.each_slice(1000) { | search_names|
+    base = 0
+    file_total = 0
+    file_names.each_slice(1000) { | search_names |
       file_array = SqUnitReportCompressedFile.where(:filename => search_names)
       file_array.each do |file|
         files << file
       end
+      puts files.size
+      puts "Processing files #{base} - #{base + 1000}."
+      base += 1000
+      total = save_files_and_attachments(files)
+      file_total += total
     }
-    files
+    file_total
   end
 
   def save_files_and_attachments(files_original)
